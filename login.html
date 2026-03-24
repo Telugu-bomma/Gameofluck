@@ -44,16 +44,26 @@ function verify(){
   fetch(API + `?action=verifyOTP&email=${emailVal}&otp=${otpVal}`)
   .then(r => r.json())
   .then(d => {
+
     if(d.status){
-      localStorage.setItem("user", emailVal);
-      alert("✅ Login Success");
-      location.href="index.html";
+
+      // 🔥 GET USER ID
+      fetch(API + `?action=getUser&email=${emailVal}`)
+      .then(r=>r.json())
+      .then(u=>{
+
+        localStorage.setItem("userId", u.userId);
+        localStorage.setItem("wallet", u.wallet);
+
+        alert("✅ Login Success");
+        location.href="index.html";
+
+      });
+
     } else {
       alert("❌ Wrong OTP");
     }
-  })
-  .catch(err=>{
-    alert("🚨 Error: " + err);
+
   });
 }
 </script>
