@@ -2,47 +2,29 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Lottery App</title>
+<title>Game of Luck</title>
 
 <style>
-body {
-  font-family: Arial;
-  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color: white;
-  text-align: center;
-  padding-top: 60px;
+body{
+  background:#0f172a;
+  color:white;
+  font-family:Arial;
+  text-align:center;
 }
 
-h1 {
-  font-size: 30px;
+.card{
+  background:#1e293b;
+  padding:20px;
+  margin:10px;
+  border-radius:15px;
 }
 
-button {
-  padding: 15px 35px;
-  font-size: 20px;
-  background: #00ffcc;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-button:hover {
-  background: #00ccaa;
-}
-
-#winnerBox {
-  margin-top: 40px;
-  font-size: 22px;
-  background: rgba(255,255,255,0.1);
-  padding: 20px;
-  border-radius: 15px;
-  display: inline-block;
-}
-
-.loader {
-  margin-top:20px;
-  display:none;
+button{
+  background:#22c55e;
+  border:none;
+  padding:10px 20px;
+  border-radius:10px;
+  color:white;
 }
 </style>
 
@@ -50,43 +32,44 @@ button:hover {
 
 <body>
 
-<h1>🎉 Lucky Draw App 🎉</h1>
+<h1>🎰 Game of Luck</h1>
 
-<button onclick="drawWinner()">Draw Winner</button>
+<div class="card">
+💰 Wallet: ₹<span id="wallet">0</span>
+</div>
 
-<div class="loader" id="loader">⏳ Drawing...</div>
-
-<div id="winnerBox"></div>
+<div id="lots"></div>
 
 <script>
 
-const API = "https://script.google.com/macros/s/AKfycbw_tlddD7MnSrIFo1fKEKyMFNerKVNgmqxkPGc6S2tsYEUKF_tPUhJf67MQYBXgD18c/exec";
+const API = "YOUR_GAS_URL";
 
-function drawWinner() {
-  document.getElementById("loader").style.display = "block";
-  document.getElementById("winnerBox").innerHTML = "";
-
-  fetch(API)
-    .then(res => res.json())
-    .then(data => {
-
-      document.getElementById("loader").style.display = "none";
-
-      if (data.error) {
-        document.getElementById("winnerBox").innerHTML = "❌ " + data.error;
-      } else {
-        document.getElementById("winnerBox").innerHTML = `
-          🏆 Winner Selected! <br><br>
-          👤 Name: <b>${data.name}</b><br>
-          📱 Mobile: ${data.mobile}
-        `;
-      }
-    })
-    .catch(err => {
-      document.getElementById("loader").style.display = "none";
-      document.getElementById("winnerBox").innerHTML = "⚠️ Error connecting API";
+function loadLots(){
+  fetch(API+"?action=getLots")
+  .then(r=>r.json())
+  .then(data=>{
+    let html="";
+    data.forEach(l=>{
+      html += `
+      <div class="card">
+        ${l.name} <br>
+        Price: ₹${l.price} <br>
+        <button onclick="buy('${l.id}')">Buy</button>
+      </div>`;
     });
+    document.getElementById("lots").innerHTML = html;
+  });
 }
+
+function buy(lotId){
+  fetch(API+`?action=buy&userId=U001&lotId=${lotId}`)
+  .then(r=>r.json())
+  .then(d=>{
+    alert("Ticket Code: "+d.code);
+  });
+}
+
+loadLots();
 
 </script>
 
