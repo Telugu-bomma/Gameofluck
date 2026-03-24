@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Panel</title>
+</head>
+
+<body>
+
+<h2>🎯 Draw Winner</h2>
+
+<input id="lotId" placeholder="Enter Lot ID">
+<button onclick="draw()">Draw</button>
+
+<div id="result"></div>
+
+<script>
+const API = "YOUR_GAS_URL";
+
+function draw(){
+ const lotId = document.getElementById("lotId").value;
+
+ fetch(API+`?action=draw&lotId=${lotId}`)
+ .then(r=>r.json())
+ .then(d=>{
+   document.getElementById("result").innerHTML =
+   "Winner User: "+d.userId+" Code: "+d.code;
+ });
+}
+</script>
+
+</body>
+</html>
