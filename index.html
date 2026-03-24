@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lottery Draw</title>
+<style>
+body{
+  font-family: Arial;
+  background:#000;
+  color:#00ff00;
+  text-align:center;
+  padding-top:40px;
+}
+button{
+  padding:15px 30px;
+  font-size:18px;
+  background:#00ff00;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+#winner{
+  margin-top:30px;
+  font-size:22px;
+}
+</style>
+</head>
+<body>
+
+<h1>🎉 Lottery Draw 🎉</h1>
+
+<button onclick="draw()">Draw Winner</button>
+
+<div id="winner"></div>
+
+<script>
+const API = "PASTE_WEB_APP_URL_HERE";
+
+function draw(){
+  fetch(API)
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.error){
+        winner.innerHTML = d.error;
+      }else{
+        winner.innerHTML = `
+          🏆 Winner <br><br>
+          Name: <b>${d.name}</b><br>
+          Mobile: ${d.mobile}
+        `;
+      }
+    });
+}
+</script>
+
+</body>
+</html>
