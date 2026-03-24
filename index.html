@@ -2,55 +2,92 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Lottery Draw</title>
+<title>Lottery App</title>
+
 <style>
-body{
+body {
   font-family: Arial;
-  background:#000;
-  color:#00ff00;
-  text-align:center;
-  padding-top:40px;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color: white;
+  text-align: center;
+  padding-top: 60px;
 }
-button{
-  padding:15px 30px;
-  font-size:18px;
-  background:#00ff00;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
+
+h1 {
+  font-size: 30px;
 }
-#winner{
-  margin-top:30px;
-  font-size:22px;
+
+button {
+  padding: 15px 35px;
+  font-size: 20px;
+  background: #00ffcc;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background: #00ccaa;
+}
+
+#winnerBox {
+  margin-top: 40px;
+  font-size: 22px;
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.loader {
+  margin-top:20px;
+  display:none;
 }
 </style>
+
 </head>
+
 <body>
 
-<h1>🎉 Lottery Draw 🎉</h1>
+<h1>🎉 Lucky Draw App 🎉</h1>
 
-<button onclick="draw()">Draw Winner</button>
+<button onclick="drawWinner()">Draw Winner</button>
 
-<div id="winner"></div>
+<div class="loader" id="loader">⏳ Drawing...</div>
+
+<div id="winnerBox"></div>
 
 <script>
-const API = "PASTE_WEB_APP_URL_HERE";
 
-function draw(){
+const API = "https://script.google.com/macros/s/AKfycbw_tlddD7MnSrIFo1fKEKyMFNerKVNgmqxkPGc6S2tsYEUKF_tPUhJf67MQYBXgD18c/exec";
+
+function drawWinner() {
+  document.getElementById("loader").style.display = "block";
+  document.getElementById("winnerBox").innerHTML = "";
+
   fetch(API)
-    .then(r=>r.json())
-    .then(d=>{
-      if(d.error){
-        winner.innerHTML = d.error;
-      }else{
-        winner.innerHTML = `
-          🏆 Winner <br><br>
-          Name: <b>${d.name}</b><br>
-          Mobile: ${d.mobile}
+    .then(res => res.json())
+    .then(data => {
+
+      document.getElementById("loader").style.display = "none";
+
+      if (data.error) {
+        document.getElementById("winnerBox").innerHTML = "❌ " + data.error;
+      } else {
+        document.getElementById("winnerBox").innerHTML = `
+          🏆 Winner Selected! <br><br>
+          👤 Name: <b>${data.name}</b><br>
+          📱 Mobile: ${data.mobile}
         `;
       }
+    })
+    .catch(err => {
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("winnerBox").innerHTML = "⚠️ Error connecting API";
     });
 }
+
 </script>
 
 </body>
