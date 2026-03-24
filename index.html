@@ -1,47 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
 <title>Game of Luck</title>
 
 <style>
-body{
-  background:#0f172a;
-  color:white;
-  font-family:sans-serif;
-  text-align:center;
-}
-
-.card{
-  background:#1e293b;
-  padding:20px;
-  margin:15px;
-  border-radius:15px;
-}
-
-button{
-  background:#22c55e;
-  border:none;
-  padding:10px 20px;
-  border-radius:10px;
-  color:white;
-}
+body{margin:0;background:#0f172a;color:white;font-family:sans-serif;text-align:center;}
+.header{padding:20px;font-size:22px;}
+.card{background:#1e293b;margin:15px;padding:20px;border-radius:15px;}
+button{background:#22c55e;padding:10px 20px;border:none;border-radius:10px;color:white;}
 </style>
+
 </head>
 
 <body>
 
-<h1>🎰 Game of Luck</h1>
+<div class="header">🎰 Game of Luck</div>
 
 <div class="card">
-💰 Wallet: ₹<span id="wallet">0</span>
+💰 Wallet: ₹<span id="wallet">0</span><br><br>
+<button onclick="pay()">Add ₹100</button>
 </div>
 
 <div id="lots"></div>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
-const API = "YOUR_GAS_URL";
-const userId = localStorage.getItem("userId") || "U001";
+const API = "https://script.google.com/macros/s/AKfycbw_tlddD7MnSrIFo1fKEKyMFNerKVNgmqxkPGc6S2tsYEUKF_tPUhJf67MQYBXgD18c/exec";
 
 function loadLots(){
  fetch(API+"?action=getLots")
@@ -49,24 +34,39 @@ function loadLots(){
  .then(data=>{
    let html="";
    data.forEach(l=>{
-     html += `
+     html+=`
      <div class="card">
        ${l.name}<br>
        ₹${l.price}<br>
-       <button onclick="buy('${l.id}')">Buy</button>
+       <button onclick="buy('${l.id}')">Buy Ticket</button>
      </div>`;
    });
-   document.getElementById("lots").innerHTML = html;
+   document.getElementById("lots").innerHTML=html;
  });
 }
 
 function buy(id){
- fetch(API+`?action=buy&userId=${userId}&lotId=${id}`)
+ fetch(API+`?action=buy&userId=U001&lotId=${id}`)
  .then(r=>r.json())
  .then(d=>{
    if(d.error) alert(d.error);
    else alert("🎟 Code: "+d.code);
  });
+}
+
+function pay(){
+ var options={
+  "key":"rzp_test_xxxxx", // change later
+  "amount":"10000",
+  "currency":"INR",
+  "name":"Game of Luck",
+  "handler":function(){
+    fetch(API+"?action=addMoney&userId=U001&amount=100");
+    alert("Payment Success");
+  }
+ };
+ var rzp=new Razorpay(options);
+ rzp.open();
 }
 
 loadLots();
