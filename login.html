@@ -30,18 +30,11 @@ function send(){
     return;
   }
 
-  fetch(API + `?action=sendOTP&email=${emailVal}`)
-  .then(res => res.json())
-  .then(data => {
-    if(data.status){
-      alert("✅ OTP Sent (check spam also)");
-    } else {
-      alert("❌ Error: " + (data.error || "Try again"));
-    }
-  })
-  .catch(err => {
-    alert("🚨 Fetch Error: " + err);
-  });
+  const win = window.open(API + `?action=sendOTP&email=${emailVal}`, "_blank");
+
+  setTimeout(()=>{ win.close(); }, 2000);
+
+  alert("✅ OTP Sent");
 }
 
 function verify(){
