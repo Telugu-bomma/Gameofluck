@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+
+<style>
+body{
+  background:#020617;
+  color:white;
+  font-family:sans-serif;
+  text-align:center;
+  padding-top:100px;
+}
+
+input{
+  padding:10px;
+  margin:10px;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  padding:10px 20px;
+  background:#6366f1;
+  border:none;
+  color:white;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🔐 Login</h2>
+
+<input id="email" placeholder="Enter Email"><br>
+<button onclick="send()">Send OTP</button><br>
+
+<input id="otp" placeholder="Enter OTP"><br>
+<button onclick="verify()">Verify</button>
+
+<script>
+const API = "YOUR_GAS_URL";
+
+function send(){
+ fetch(API+`?action=sendOTP&email=${email.value}`)
+ alert("OTP Sent");
+}
+
+function verify(){
+ fetch(API+`?action=verifyOTP&email=${email.value}&otp=${otp.value}`)
+ .then(r=>r.json())
+ .then(d=>{
+   if(d.status){
+     localStorage.setItem("user", email.value);
+     location.href="index.html";
+   }else{
+     alert("Wrong OTP");
+   }
+ });
+}
+</script>
+
+</body>
+</html>
