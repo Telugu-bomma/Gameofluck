@@ -1,29 +1,25 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Admin Panel</title>
-</head>
-
 <body>
 
-<h2>🎯 Draw Winner</h2>
+<h2>Admin Panel</h2>
 
-<input id="lotId" placeholder="Enter Lot ID">
-<button onclick="draw()">Draw</button>
+<input id="lotId" placeholder="Lot ID">
+<input id="pass" placeholder="Password">
 
-<div id="result"></div>
+<button onclick="draw()">Draw Winner</button>
+
+<div id="res"></div>
 
 <script>
-const API = "YOUR_GAS_URL";
+const API = "https://script.google.com/macros/s/AKfycbw_tlddD7MnSrIFo1fKEKyMFNerKVNgmqxkPGc6S2tsYEUKF_tPUhJf67MQYBXgD18c/exec";
 
 function draw(){
- const lotId = document.getElementById("lotId").value;
-
- fetch(API+`?action=draw&lotId=${lotId}`)
+ fetch(API+`?action=draw&lotId=${lotId.value}`)
  .then(r=>r.json())
  .then(d=>{
-   document.getElementById("result").innerHTML =
-   "Winner User: "+d.userId+" Code: "+d.code;
+   document.getElementById("res").innerHTML=
+   "Winner: "+d.userId+" Code: "+d.code;
  });
 }
 </script>
