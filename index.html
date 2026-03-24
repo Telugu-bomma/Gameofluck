@@ -25,8 +25,16 @@ button{background:#22c55e;padding:10px 20px;border:none;border-radius:10px;color
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
 const API = "https://script.google.com/macros/s/AKfycbw_tlddD7MnSrIFo1fKEKyMFNerKVNgmqxkPGc6S2tsYEUKF_tPUhJf67MQYBXgD18c/exec";
+
+const userId = localStorage.getItem("userId");
+
+// 💰 Load wallet
+document.getElementById("wallet").innerText =
+  localStorage.getItem("wallet") || 0;
 
 function loadLots(){
  fetch(API+"?action=getLots")
@@ -46,7 +54,7 @@ function loadLots(){
 }
 
 function buy(id){
- fetch(API+`?action=buy&userId=U001&lotId=${id}`)
+ fetch(API+`?action=buy&userId=${userId}&lotId=${id}`)
  .then(r=>r.json())
  .then(d=>{
    if(d.error) alert(d.error);
@@ -56,12 +64,12 @@ function buy(id){
 
 function pay(){
  var options={
-  "key":"rzp_test_xxxxx", // change later
+  "key":"rzp_test_xxxxx",
   "amount":"10000",
   "currency":"INR",
   "name":"Game of Luck",
   "handler":function(){
-    fetch(API+"?action=addMoney&userId=U001&amount=100");
+    fetch(API+`?action=addMoney&userId=${userId}&amount=100`);
     alert("Payment Success");
   }
  };
@@ -71,6 +79,5 @@ function pay(){
 
 loadLots();
 </script>
-
 </body>
 </html>
